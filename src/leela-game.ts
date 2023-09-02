@@ -1,3 +1,4 @@
+import { log } from 'matchstick-as'
 import {
   CommentAction as CommentActionEvent,
   DiceRolled as DiceRolledEvent,
@@ -6,6 +7,7 @@ import {
   RollDiceError as RollDiceErrorEvent
 } from '../generated/LeelaGame/LeelaGame'
 import { CommentAction, DiceRolled, PlayerAction, ReportAction, RollDiceError } from '../generated/schema'
+import { Bytes } from '@graphprotocol/graph-ts'
 
 export function handleCommentAction(event: CommentActionEvent): void {
   let entity = new CommentAction(event.transaction.hash.concatI32(event.logIndex.toI32()))
@@ -37,7 +39,9 @@ export function handleDiceRolled(event: DiceRolledEvent): void {
 }
 
 export function handlePlayerAction(event: PlayerActionEvent): void {
-  let entity = new PlayerAction(event.transaction.hash.concatI32(event.logIndex.toI32()))
+  let playerEntityId = event.transaction.hash.concatI32(event.logIndex.toI32())
+  let entity = new PlayerAction(playerEntityId)
+
   entity.player = event.params.player
   entity.fullName = event.params.fullName
   entity.avatar = event.params.avatar
@@ -52,6 +56,11 @@ export function handlePlayerAction(event: PlayerActionEvent): void {
 }
 
 export function handleReportAction(event: ReportActionEvent): void {
+  let playerActionId = event.params.actor.toHex()
+  let playerActionEntity = new PlayerAction(Bytes.fromHexString(playerActionId))
+
+  log.info('playerActionEntity:', [playerActionEntity])
+
   let entity = new ReportAction(event.transaction.hash.concatI32(event.logIndex.toI32()))
   entity.reportId = event.params.reportId
   entity.actor = event.params.actor
@@ -59,14 +68,12 @@ export function handleReportAction(event: ReportActionEvent): void {
   entity.plan = event.params.plan
   entity.timestamp = event.params.timestamp
   entity.action = event.params.action
-
+  entity.playerAction = playerActionEntity
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
-
   entity.save()
 }
-
 export function handleRollDiceError(event: RollDiceErrorEvent): void {
   let entity = new RollDiceError(event.transaction.hash.concatI32(event.logIndex.toI32()))
   entity.message = event.params.message

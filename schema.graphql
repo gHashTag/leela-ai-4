@@ -41,6 +41,7 @@ type ReportAction @entity(immutable: true) {
   plan: BigInt! # uint256
   timestamp: BigInt! # uint256
   action: Int! # uint8
+  playerAction: PlayerAction! # Linked player action
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!

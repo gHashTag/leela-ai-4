@@ -563,6 +563,19 @@ export class ReportAction extends Entity {
     this.set("action", Value.fromI32(value));
   }
 
+  get playerAction(): Bytes {
+    let value = this.get("playerAction");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set playerAction(value: Bytes) {
+    this.set("playerAction", Value.fromBytes(value));
+  }
+
   get blockNumber(): BigInt {
     let value = this.get("blockNumber");
     if (!value || value.kind == ValueKind.NULL) {
