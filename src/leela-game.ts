@@ -4,19 +4,11 @@ import {
   PlayerAction as PlayerActionEvent,
   ReportAction as ReportActionEvent,
   RollDiceError as RollDiceErrorEvent
-} from "../generated/LeelaGame/LeelaGame"
-import {
-  CommentAction,
-  DiceRolled,
-  PlayerAction,
-  ReportAction,
-  RollDiceError
-} from "../generated/schema"
+} from '../generated/LeelaGame/LeelaGame'
+import { CommentAction, DiceRolled, PlayerAction, ReportAction, RollDiceError } from '../generated/schema'
 
 export function handleCommentAction(event: CommentActionEvent): void {
-  let entity = new CommentAction(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
+  let entity = new CommentAction(event.transaction.hash.concatI32(event.logIndex.toI32()))
   entity.commentId = event.params.commentId
   entity.reportId = event.params.reportId
   entity.actor = event.params.actor
@@ -32,9 +24,7 @@ export function handleCommentAction(event: CommentActionEvent): void {
 }
 
 export function handleDiceRolled(event: DiceRolledEvent): void {
-  let entity = new DiceRolled(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
+  let entity = new DiceRolled(event.transaction.hash.concatI32(event.logIndex.toI32()))
   entity.roller = event.params.roller
   entity.rolled = event.params.rolled
   entity.currentPlan = event.params.currentPlan
@@ -47,9 +37,7 @@ export function handleDiceRolled(event: DiceRolledEvent): void {
 }
 
 export function handlePlayerAction(event: PlayerActionEvent): void {
-  let entity = new PlayerAction(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
+  let entity = new PlayerAction(event.transaction.hash.concatI32(event.logIndex.toI32()))
   entity.player = event.params.player
   entity.fullName = event.params.fullName
   entity.avatar = event.params.avatar
@@ -64,9 +52,7 @@ export function handlePlayerAction(event: PlayerActionEvent): void {
 }
 
 export function handleReportAction(event: ReportActionEvent): void {
-  let entity = new ReportAction(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
+  let entity = new ReportAction(event.transaction.hash.concatI32(event.logIndex.toI32()))
   entity.reportId = event.params.reportId
   entity.actor = event.params.actor
   entity.content = event.params.content
@@ -82,9 +68,7 @@ export function handleReportAction(event: ReportActionEvent): void {
 }
 
 export function handleRollDiceError(event: RollDiceErrorEvent): void {
-  let entity = new RollDiceError(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
+  let entity = new RollDiceError(event.transaction.hash.concatI32(event.logIndex.toI32()))
   entity.message = event.params.message
 
   entity.blockNumber = event.block.number
